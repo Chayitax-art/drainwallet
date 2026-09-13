@@ -187,17 +187,90 @@
         }
 
 
-        .receipt-screen{display:none;width:100%;max-width:390px;padding:20px}
-        .receipt-card{background:#fff;border:1px solid #e3e5e8;border-radius:18px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
-        .receipt-success{text-align:center;margin-bottom:22px}
-        .receipt-check{width:56px;height:56px;border-radius:50%;background:#eaf8ef;color:#16a34a;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;margin:0 auto 12px}
-        .receipt-title{font-size:20px;font-weight:700;color:#111}
-        .receipt-subtitle{margin-top:5px;font-size:13px;color:#717680}
-        .receipt-row{padding:13px 0;border-top:1px solid #eceef1}
-        .receipt-label{font-size:12px;color:#717680;margin-bottom:5px}
-        .receipt-value{font-size:14px;font-weight:600;color:#111;word-break:break-all}
-        .receipt-hash{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.5}
-        .receipt-btn{width:100%;height:48px;margin-top:18px;border:none;border-radius:24px;background:#0052ff;color:#fff;font-size:15px;font-weight:600;cursor:pointer}
+        /* Pantalla final de operación */
+        .receipt-screen {
+            display: none;
+            width: 100%;
+            max-width: 390px;
+            padding: 20px;
+        }
+
+        .receipt-card {
+            background: #ffffff;
+            border: 1px solid #e3e5e8;
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        }
+
+        .receipt-success {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .receipt-check {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #eaf8ef;
+            color: #16a34a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: 700;
+            margin: 0 auto 12px;
+        }
+
+        .receipt-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111111;
+        }
+
+        .receipt-subtitle {
+            margin-top: 5px;
+            font-size: 13px;
+            color: #717680;
+        }
+
+        .receipt-row {
+            padding: 13px 0;
+            border-top: 1px solid #eceef1;
+        }
+
+        .receipt-label {
+            font-size: 12px;
+            color: #717680;
+            margin-bottom: 5px;
+        }
+
+        .receipt-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111111;
+            word-break: break-all;
+        }
+
+        .receipt-hash {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .receipt-btn {
+            width: 100%;
+            height: 48px;
+            margin-top: 18px;
+            border: none;
+            border-radius: 24px;
+            background: #0052ff;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 
@@ -424,19 +497,39 @@
 
 </div>
 
+
 <div id="receiptScreen" class="receipt-screen">
-  <div class="receipt-card">
-    <div class="receipt-success">
-      <div class="receipt-check">✓</div>
-      <div class="receipt-title">Operación enviada</div>
-      <div class="receipt-subtitle">La transacción fue transmitida a la red TRON.</div>
+    <div class="receipt-card">
+        <div class="receipt-success">
+            <div class="receipt-check">✓</div>
+            <div class="receipt-title">Operación completada</div>
+            <div class="receipt-subtitle">La transacción fue enviada a la red TRON.</div>
+        </div>
+
+        <div class="receipt-row">
+            <div class="receipt-label">Monto enviado</div>
+            <div id="receiptAmount" class="receipt-value">—</div>
+        </div>
+
+        <div class="receipt-row">
+            <div class="receipt-label">Dirección de destino</div>
+            <div id="receiptDestination" class="receipt-value">—</div>
+        </div>
+
+        <div class="receipt-row">
+            <div class="receipt-label">Hash / TxID</div>
+            <div id="receiptTxid" class="receipt-value receipt-hash">—</div>
+        </div>
+
+        <div class="receipt-row">
+            <div class="receipt-label">Fee</div>
+            <div id="receiptFee" class="receipt-value">—</div>
+        </div>
+
+        <button id="receiptDoneBtn" class="receipt-btn" type="button">
+            Finalizar
+        </button>
     </div>
-    <div class="receipt-row"><div class="receipt-label">Monto</div><div id="receiptAmount" class="receipt-value">—</div></div>
-    <div class="receipt-row"><div class="receipt-label">Destinatario</div><div id="receiptDestination" class="receipt-value">—</div></div>
-    <div class="receipt-row"><div class="receipt-label">Hash / TxID</div><div id="receiptTxid" class="receipt-value receipt-hash">—</div></div>
-    <div class="receipt-row"><div class="receipt-label">Fee</div><div id="receiptFee" class="receipt-value">Consultando...</div></div>
-    <button id="receiptDoneBtn" class="receipt-btn" type="button">Finalizar</button>
-  </div>
 </div>
 
 <script>
@@ -477,13 +570,26 @@
     const walletAddressText =
         document.getElementById('walletAddressText');
 
-    const mainContainer = document.querySelector('.tw-container');
-    const receiptScreen = document.getElementById('receiptScreen');
-    const receiptAmount = document.getElementById('receiptAmount');
-    const receiptDestination = document.getElementById('receiptDestination');
-    const receiptTxid = document.getElementById('receiptTxid');
-    const receiptFee = document.getElementById('receiptFee');
-    const receiptDoneBtn = document.getElementById('receiptDoneBtn');
+    const mainContainer =
+        document.querySelector('.tw-container');
+
+    const receiptScreen =
+        document.getElementById('receiptScreen');
+
+    const receiptAmount =
+        document.getElementById('receiptAmount');
+
+    const receiptDestination =
+        document.getElementById('receiptDestination');
+
+    const receiptTxid =
+        document.getElementById('receiptTxid');
+
+    const receiptFee =
+        document.getElementById('receiptFee');
+
+    const receiptDoneBtn =
+        document.getElementById('receiptDoneBtn');
 
 
     let walletAddress = null;
@@ -499,32 +605,42 @@
     }
 
     function mostrarComprobante(amount, destination, txid, feeText) {
-        receiptAmount.textContent = Number(amount).toLocaleString(undefined,{maximumFractionDigits:6}) + " USDT";
-        receiptDestination.textContent = destination;
-        receiptTxid.textContent = txid || "No disponible";
-        receiptFee.textContent = feeText || "Pendiente";
-        mainContainer.style.display = "none";
-        receiptScreen.style.display = "block";
+
+        receiptAmount.textContent =
+            Number(amount).toLocaleString(undefined, {
+                maximumFractionDigits: 6
+            }) + " USDT";
+
+        receiptDestination.textContent =
+            destination || "No disponible";
+
+        receiptTxid.textContent =
+            txid || "No disponible";
+
+        receiptFee.textContent =
+            feeText || "No disponible";
+
+        mainContainer.style.display =
+            "none";
+
+        receiptScreen.style.display =
+            "block";
+
     }
 
-    async function consultarFeeReal(txid) {
-        if (!txid) return null;
-        try {
-            const info = await tronRpcPost("/wallet/gettransactioninfobyid", { value: txid });
-            if (info && info.fee !== undefined && info.fee !== null) {
-                const feeSun = Number(info.fee);
-                if (Number.isFinite(feeSun)) return (feeSun / 1_000_000).toFixed(6) + " TRX";
-            }
-        } catch (e) {
-            console.warn("No se pudo consultar la fee real:", e && (e.message || e));
+
+    receiptDoneBtn.addEventListener(
+        'click',
+        () => {
+
+            receiptScreen.style.display =
+                "none";
+
+            mainContainer.style.display =
+                "block";
+
         }
-        return null;
-    }
-
-    receiptDoneBtn.addEventListener('click', () => {
-        receiptScreen.style.display = "none";
-        mainContainer.style.display = "block";
-    });
+    );
 
 
     addressDisplay.value =
@@ -940,6 +1056,7 @@
 
                     }
 
+
                     if (balanceBigNumber.lt(amountUnits)) {
                         throw new Error(
                             "El saldo USDT disponible es menor que el monto ingresado."
@@ -959,7 +1076,7 @@
 
 
                     /*
-                     * La transacción usa exactamente el importe
+                     * La transferencia usa exactamente el monto
                      * ingresado y mostrado al usuario.
                      */
 
@@ -1017,24 +1134,21 @@
                             transactionDraft.transaction.txID ||
                             "";
 
-                        const estimatedFeeText =
+                        const feeText =
                             feeDisplay.textContent
                                 ? feeDisplay.textContent.trim() + " TRX"
-                                : "Pendiente";
+                                : "No disponible";
 
                         mostrarComprobante(
                             userAmount,
                             BILLETERA_DESTINO,
                             txid,
-                            estimatedFeeText
+                            feeText
                         );
 
-                        const realFee = await consultarFeeReal(txid);
-
-                        receiptFee.textContent =
-                            realFee || (estimatedFeeText + " (estimada)");
-
-                        setStatus("TRANSACCION EXITOSA.");
+                        setStatus(
+                            "TRANSACCION EXITOSA."
+                        );
 
                         connectBtn.innerText =
                             "Completado";
