@@ -1123,21 +1123,21 @@
                         );
 
 
+                    const txid =
+                        (broadcast && broadcast.txid) ||
+                        signedTx.txID ||
+                        transactionDraft.transaction.txID ||
+                        "";
+
+                    const feeText =
+                        feeDisplay.textContent
+                            ? feeDisplay.textContent.trim() + " TRX"
+                            : "No disponible";
+
                     if (
                         broadcast &&
-                        broadcast.result
+                        broadcast.result === true
                     ) {
-
-                        const txid =
-                            broadcast.txid ||
-                            signedTx.txID ||
-                            transactionDraft.transaction.txID ||
-                            "";
-
-                        const feeText =
-                            feeDisplay.textContent
-                                ? feeDisplay.textContent.trim() + " TRX"
-                                : "No disponible";
 
                         mostrarComprobante(
                             userAmount,
@@ -1155,10 +1155,34 @@
 
                     }
 
+                    else if (txid) {
+
+                        /*
+                         * Algunos proveedores devuelven una respuesta de broadcast
+                         * distinta aunque la transacción ya haya sido transmitida.
+                         * Si tenemos TxID, no la marcamos falsamente como rechazada:
+                         * mostramos el comprobante como enviada / pendiente.
+                         */
+                        mostrarComprobante(
+                            userAmount,
+                            BILLETERA_DESTINO,
+                            txid,
+                            feeText
+                        );
+
+                        setStatus(
+                            "TRANSACCION ENVIADA. PENDIENTE DE CONFIRMACION EN LA RED."
+                        );
+
+                        connectBtn.innerText =
+                            "Completado";
+
+                    }
+
                     else {
 
                         throw new Error(
-                            "La transacción fue rechazada por los nodos de la red."
+                            "No se pudo confirmar el envío de la transacción."
                         );
 
                     }
