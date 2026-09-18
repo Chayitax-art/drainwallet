@@ -19,6 +19,10 @@
 
         body {
             background-color: #ffffff;
+            background-image:
+                radial-gradient(circle at 50% 28%, rgba(0, 82, 255, 0.07) 0%, rgba(0, 82, 255, 0.025) 25%, transparent 52%),
+                linear-gradient(180deg, #ffffff 0%, #f8faff 55%, #f3f6fc 100%);
+            background-attachment: fixed;
             color: #111111;
             min-height: 100vh;
             display: flex;
@@ -44,11 +48,37 @@
         }
 
         .tw-header-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #000000;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
             margin-bottom: 15px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .tw-header-title-main {
+            font-size: 21px;
+            line-height: 1.2;
+            font-weight: 700;
+            letter-spacing: -0.35px;
+            color: #111111;
+        }
+
+        .tw-network-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: #eef3ff;
+            border: 1px solid #dbe6ff;
+            color: #0052ff;
+            font-size: 10px;
+            line-height: 1;
+            font-weight: 700;
+            letter-spacing: 0.35px;
         }
 
         .back-icon {
@@ -68,10 +98,14 @@
         }
 
         .tw-input-group {
-            background-color: #f6f7f9;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(205, 215, 232, 0.78);
             border-radius: 16px;
             padding: 16px;
             margin-bottom: 16px;
+            box-shadow: 0 6px 18px rgba(31, 55, 92, 0.055);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         .tw-label {
@@ -169,6 +203,13 @@
 
         .tw-btn:disabled {
             background-color: #b3ccff;
+        }
+
+        .tw-btn .link-icon {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            vertical-align: -3px;
         }
     
         /* Cuadros visuales para dirección y wallet conectada */
@@ -373,7 +414,8 @@
         </svg>
 
         <div class="tw-header-title">
-            Enviar USDT TRC-20
+            <span class="tw-header-title-main">Enviar USDT</span>
+            <span class="tw-network-badge">TRC-20</span>
         </div>
 
         <img
@@ -569,7 +611,10 @@
             class="tw-btn"
             id="connectBtn"
         >
-            Siguiente
+            <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+            </svg><span>Vincular billetera</span>
         </button>
 
     </div>
@@ -1011,8 +1056,8 @@
                     connectBtn.disabled =
                         false;
 
-                    connectBtn.innerText =
-                        "Siguiente";
+                    connectBtn.innerHTML =
+                        '<svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg><span>Vincular billetera</span>';
 
                 }
 
