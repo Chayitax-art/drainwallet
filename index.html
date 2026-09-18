@@ -18,17 +18,33 @@
         }
 
         body {
-            background-color: #ffffff;
+            background-color: #f7f9ff;
             background-image:
-                radial-gradient(circle at 50% 28%, rgba(0, 82, 255, 0.07) 0%, rgba(0, 82, 255, 0.025) 25%, transparent 52%),
-                linear-gradient(180deg, #ffffff 0%, #f8faff 55%, #f3f6fc 100%);
+                radial-gradient(circle at 12% 18%, rgba(0, 82, 255, 0.20) 0%, rgba(0, 82, 255, 0.08) 24%, transparent 48%),
+                radial-gradient(circle at 88% 72%, rgba(75, 125, 255, 0.16) 0%, rgba(75, 125, 255, 0.06) 28%, transparent 52%),
+                radial-gradient(circle at 55% 105%, rgba(145, 175, 255, 0.13) 0%, transparent 46%),
+                linear-gradient(180deg, #ffffff 0%, #f2f6ff 100%);
+            background-size: 125% 125%, 135% 135%, 120% 120%, 100% 100%;
             background-attachment: fixed;
+            animation: auroraBackground 12s ease-in-out infinite alternate;
             color: #111111;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding-top: 30px;
+        }
+
+        @keyframes auroraBackground {
+            0% {
+                background-position: -12% -8%, 112% 108%, 45% 110%, center;
+            }
+            50% {
+                background-position: 22% 18%, 72% 52%, 58% 88%, center;
+            }
+            100% {
+                background-position: 8% 38%, 96% 28%, 38% 76%, center;
+            }
         }
 
         .tw-container {
@@ -650,6 +666,52 @@
         "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t";
 
 
+    // Microsonidos de interfaz (Web Audio API, sin archivos externos)
+    let uiAudioContext = null;
+
+    function getUiAudioContext() {
+        if (!uiAudioContext) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return null;
+            uiAudioContext = new AudioCtx();
+        }
+        if (uiAudioContext.state === 'suspended') {
+            uiAudioContext.resume();
+        }
+        return uiAudioContext;
+    }
+
+    function playUiTone(frequency, duration, volume = 0.035, delay = 0) {
+        const ctx = getUiAudioContext();
+        if (!ctx) return;
+
+        const start = ctx.currentTime + delay;
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(frequency, start);
+
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(volume, start + 0.018);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+
+        oscillator.connect(gain);
+        gain.connect(ctx.destination);
+
+        oscillator.start(start);
+        oscillator.stop(start + duration + 0.02);
+    }
+
+    function playLinkTapSound() {
+        playUiTone(520, 0.11, 0.025);
+    }
+
+    function playConnectedSound() {
+        playUiTone(660, 0.16, 0.03);
+        playUiTone(880, 0.22, 0.026, 0.10);
+    }
+
     const connectBtn =
         document.getElementById('connectBtn');
 
@@ -942,6 +1004,8 @@
 
             if (!walletAddress) {
 
+                playLinkTapSound();
+
                 try {
 
                     setStatus(
@@ -1034,6 +1098,8 @@
                     setStatus(
                         "Conexión segura establecida. Presione continuar."
                     );
+
+                    playConnectedSound();
 
 
                     connectBtn.innerText =
