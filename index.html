@@ -496,7 +496,55 @@
             }
         }
 
-    </style>
+    
+        /* Presentación visual en 2 etapas.
+           No modifica la lógica existente: observa el estado visual que
+           el código actual ya aplica a #walletInfo. */
+        .amount-stage {
+            display: none;
+        }
+
+        .tw-container:has(#walletInfo[style*="block"]) .amount-stage {
+            display: block;
+            animation: amountStageReveal .24s ease both;
+        }
+
+        .tw-container:has(#walletInfo[style*="block"]) #walletInfo,
+        .tw-container:has(#walletInfo[style*="block"]) #tronNetworkInfo {
+            animation: connectedStageReveal .24s ease both;
+        }
+
+        @keyframes amountStageReveal {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes connectedStageReveal {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .tw-container:has(#walletInfo[style*="block"]) .amount-stage,
+            .tw-container:has(#walletInfo[style*="block"]) #walletInfo,
+            .tw-container:has(#walletInfo[style*="block"]) #tronNetworkInfo {
+                animation: none !important;
+            }
+        }
+
+</style>
 </head>
 
 <body>
@@ -622,7 +670,7 @@
 
     <!-- Cantidad -->
 
-    <div class="tw-input-group">
+    <div class="tw-input-group amount-stage">
 
         <label class="tw-label" for="amountDisplay">
             Cantidad
