@@ -185,7 +185,7 @@
             background-color: #f6f7f9;
             border-radius: 12px;
             padding: 14px;
-            margin-bottom: 16px;
+            margin-bottom: 22px;
         }
 
         .wallet-info-title {
@@ -226,6 +226,63 @@
             height: 18px;
             margin-right: 8px;
             vertical-align: -3px;
+        }
+
+        /* Tarjeta de red conectada */
+        .network-card {
+            display: none;
+            align-items: center;
+            gap: 11px;
+            margin: 4px 0 22px;
+            padding: 12px 14px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(205, 215, 232, 0.78);
+            border-radius: 14px;
+            box-shadow: 0 6px 18px rgba(31, 55, 92, 0.05);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .network-card-logo {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+            flex: 0 0 auto;
+        }
+
+        .network-card-copy {
+            min-width: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .network-card-label {
+            color: #717680;
+            font-size: 11px;
+            line-height: 1.2;
+        }
+
+        .network-card-name {
+            color: #111111;
+            font-size: 14px;
+            line-height: 1.25;
+            font-weight: 650;
+        }
+
+        .network-card-badge {
+            flex: 0 0 auto;
+            padding: 5px 8px;
+            border-radius: 999px;
+            background: #eef3ff;
+            border: 1px solid #dbe6ff;
+            color: #0052ff;
+            font-size: 10px;
+            line-height: 1;
+            font-weight: 700;
+            letter-spacing: 0.25px;
         }
     
         /* Cuadros visuales para dirección y wallet conectada */
@@ -462,41 +519,17 @@
         </div>
     </div>
 
-        <div id="tronNetworkInfo" style="
-            display: none;
-            
-            
-            align-items: center;
-            justify-content: flex-start;
-            gap: 7px;
-            margin: 8px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #111111;
-        
-            background: #eeeeee;
-            border: 1px solid #d6d9de;
-            border-radius: 12px;
-            padding: 9px 12px;
-            width: fit-content;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-">
+        <div id="tronNetworkInfo" class="network-card">
             <img
                 src="https://cryptologos.cc/logos/tron-trx-logo.png"
                 alt="TRON"
-                style="
-                    width: 20px;
-                    height: 20px;
-                    object-fit: contain;
-                "
+                class="network-card-logo"
             >
-            <span>TRON</span>
-            <span style="
-                font-size: 14px;
-                color: #717680;
-                letter-spacing: -2px;
-                margin-left: 1px;
-            ">↑ ↓</span>
+            <div class="network-card-copy">
+                <span class="network-card-label">Red conectada</span>
+                <span class="network-card-name">TRON</span>
+            </div>
+            <span class="network-card-badge">TRC-20</span>
         </div>
 
         <div class="tw-input-group tw-address-box">
