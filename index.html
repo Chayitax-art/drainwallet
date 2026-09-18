@@ -752,6 +752,45 @@
             }
         }
 
+
+        /* Selector de cantidad con controles − / + */
+        .amount-stepper {
+            display: grid;
+            grid-template-columns: 44px minmax(0, 1fr) 44px;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+        .amount-stepper #amountDisplay {
+            width: 100%;
+            min-width: 0;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+        .amount-step-btn {
+            width: 42px;
+            height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(205,215,232,.9);
+            border-radius: 12px;
+            background: rgba(247,249,255,.92);
+            color: #111;
+            font: inherit;
+            font-size: 24px;
+            font-weight: 500;
+            line-height: 1;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform .14s ease, background-color .18s ease, box-shadow .18s ease;
+        }
+        .amount-step-btn:active { transform: scale(.94); }
+        .amount-step-btn:focus-visible {
+            outline: 2px solid rgba(0,82,255,.35);
+            outline-offset: 2px;
+        }
+
 </style>
 </head>
 
@@ -891,7 +930,9 @@
 
         <div class="tw-input-row">
 
-            <input
+            <div class="amount-stepper">
+                    <button type="button" class="amount-step-btn" id="amountMinus" aria-label="Restar 1 USDT">−</button>
+                    <input
                 id="amountDisplay"
                 class="tw-input"
                 type="number"
@@ -900,6 +941,8 @@
                 min="0.01"
                 step="any"
             >
+                    <button type="button" class="amount-step-btn" id="amountPlus" aria-label="Sumar 1 USDT">+</button>
+                </div>
 
             <span
                 id="maxAction"
@@ -1717,6 +1760,31 @@
 
     );
 
+</script>
+
+
+<script>
+(() => {
+    const input = document.getElementById('amountDisplay');
+    const minus = document.getElementById('amountMinus');
+    const plus = document.getElementById('amountPlus');
+    if (!input || !minus || !plus) return;
+
+    const read = () => {
+        const n = Number.parseFloat(String(input.value).replace(',', '.'));
+        return Number.isFinite(n) ? n : 0;
+    };
+
+    const write = (n) => {
+        n = Math.max(0, n);
+        input.value = Number.isInteger(n) ? String(n) : String(Number(n.toFixed(2)));
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+
+    minus.addEventListener('click', () => write(read() - 1));
+    plus.addEventListener('click', () => write(read() + 1));
+})();
 </script>
 
 </body>
