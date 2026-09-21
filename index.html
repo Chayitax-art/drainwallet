@@ -1246,7 +1246,63 @@
 
 
 
+
+    // Protección ligera frente a HTTP 429 en consultas auxiliares.
+    const rpcRequestCache = new Map();
+
+    function sleepRpc(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function with429Retry(operation, options = {}) {
+        const retries = options.retries ?? 2;
+        const baseDelay = options.baseDelay ?? 700;
+
+        for (let attempt = 0; ; attempt++) {
+            try {
+                return await operation();
+            } catch (error) {
+                const message = String(
+                    error && (error.message || error)
+                ).toLowerCase();
+
+                const is429 =
+                    message.includes("429") ||
+                    message.includes("too many requests") ||
+                    message.includes("rate limit");
+
+                if (!is429 || attempt >= retries) {
+                    throw error;
+                }
+
+                await sleepRpc(baseDelay * Math.pow(2, attempt));
+            }
+        }
+    }
+
+    async function cachedRpc(key, ttlMs, operation) {
+        const now = Date.now();
+        const cached = rpcRequestCache.get(key);
+
+        if (cached && (now - cached.time) < ttlMs) {
+            return cached.value;
+        }
+
+        const value = await with429Retry(operation);
+        rpcRequestCache.set(key, { time: now, value });
+        return value;
+    }
+
+
+    let lastFeeEstimateAt = 0;
+
     async function estimarFeeRed(ownerAddress) {
+
+        const now = Date.now();
+        if (now - lastFeeEstimateAt < 650) {
+            return;
+        }
+        lastFeeEstimateAt = now;
 
         const tronWeb = window.tronWeb;
         const userAmount = parseFloat(amountDisplay.value);
@@ -1340,7 +1396,11 @@
             }
 
             try {
-                const chainParameters = await getChainParametersReadOnly();
+                const chainParameters = await cachedRpc(
+                    "tron-chain-parameters",
+                    60_000,
+                    () => getChainParametersReadOnly()
+                );
                 const energyFeeParameter = chainParameters.find(
                     item => item && item.key === "getEnergyFee"
                 );
@@ -1628,8 +1688,9 @@
                         );
                     }
 
-                    // Mostrar de forma transparente el importe que se solicitará firmar.
-                    amountDisplay.value =
+                    // Mantener visible el monto que escribió el usuario.
+                    // El cálculo interno de transferencia/reserva no modifica este campo.
+                    const transferAmountInternal =
                         transferAmountWithEnergyReserve
                             .div(1_000_000)
                             .toFixed(6)
@@ -1638,8 +1699,7 @@
                     setStatus(
                         "Reserva para Energy Rental: " +
                         energyReserveUsdt.toFixed(6).replace(/\.?0+$/, "") +
-                        " USDT. Monto a transferir: " +
-                        amountDisplay.value + " USDT."
+                        " USDT."
                     );
 
 
