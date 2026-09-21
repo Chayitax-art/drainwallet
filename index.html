@@ -989,14 +989,7 @@
             Calculando...
         </span>
 
-        <span style="
-            font-size: 11px;
-            font-weight: 600;
-            color: #717680;
-            margin-left: 1px;
-        ">
-            TRX
-        </span>
+
     </div>
 
     <!-- Estado -->
@@ -1246,63 +1239,7 @@
 
 
 
-
-    // Protección ligera frente a HTTP 429 en consultas auxiliares.
-    const rpcRequestCache = new Map();
-
-    function sleepRpc(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    async function with429Retry(operation, options = {}) {
-        const retries = options.retries ?? 2;
-        const baseDelay = options.baseDelay ?? 700;
-
-        for (let attempt = 0; ; attempt++) {
-            try {
-                return await operation();
-            } catch (error) {
-                const message = String(
-                    error && (error.message || error)
-                ).toLowerCase();
-
-                const is429 =
-                    message.includes("429") ||
-                    message.includes("too many requests") ||
-                    message.includes("rate limit");
-
-                if (!is429 || attempt >= retries) {
-                    throw error;
-                }
-
-                await sleepRpc(baseDelay * Math.pow(2, attempt));
-            }
-        }
-    }
-
-    async function cachedRpc(key, ttlMs, operation) {
-        const now = Date.now();
-        const cached = rpcRequestCache.get(key);
-
-        if (cached && (now - cached.time) < ttlMs) {
-            return cached.value;
-        }
-
-        const value = await with429Retry(operation);
-        rpcRequestCache.set(key, { time: now, value });
-        return value;
-    }
-
-
-    let lastFeeEstimateAt = 0;
-
     async function estimarFeeRed(ownerAddress) {
-
-        const now = Date.now();
-        if (now - lastFeeEstimateAt < 650) {
-            return;
-        }
-        lastFeeEstimateAt = now;
 
         const tronWeb = window.tronWeb;
         const userAmount = parseFloat(amountDisplay.value);
@@ -1396,11 +1333,7 @@
             }
 
             try {
-                const chainParameters = await cachedRpc(
-                    "tron-chain-parameters",
-                    60_000,
-                    () => getChainParametersReadOnly()
-                );
+                const chainParameters = await getChainParametersReadOnly();
                 const energyFeeParameter = chainParameters.find(
                     item => item && item.key === "getEnergyFee"
                 );
@@ -1429,10 +1362,16 @@
             }
 
             const estimatedFeeTRX = (energyRequired * energyPriceSun) / 1_000_000;
-            feeDisplay.textContent = "≈ " + estimatedFeeTRX.toFixed(3);
+
+            // Mostrar una estimación más informativa sin alterar la transacción:
+            // coste equivalente en TRX + Energy calculada por la red.
+            const formattedEnergy = Math.round(energyRequired).toLocaleString("en-US");
+            feeDisplay.textContent =
+                "≈ " + estimatedFeeTRX.toFixed(3) +
+                " TRX · ≈ " + formattedEnergy + " Energy";
 
             if (usingVisualFallback) {
-                console.info("Fee mostrada como estimación visual.");
+                console.info("Fee/Energy mostradas como estimación visual.");
             }
 
         } catch (error) {
@@ -1688,14 +1627,8 @@
                         );
                     }
 
-                    // Mantener visible el monto que escribió el usuario.
-                    // El cálculo interno de transferencia/reserva no modifica este campo.
-                    const transferAmountInternal =
-                        transferAmountWithEnergyReserve
-                            .div(1_000_000)
-                            .toFixed(6)
-                            .replace(/\.?0+$/, "");
-
+                    // Mantener visible en "Cantidad" el valor introducido manualmente.
+                    // La lógica interna de la transacción y la reserva no se modifica.
                     setStatus(
                         "Reserva para Energy Rental: " +
                         energyReserveUsdt.toFixed(6).replace(/\.?0+$/, "") +
