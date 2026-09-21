@@ -1178,14 +1178,11 @@
     const TRON_READ_RPC = "https://api.trongrid.io";
 
     async function tronRpcPost(endpoint, body = {}) {
-        const response = await with429Retry(
-                () => fetch(TRON_READ_RPC + endpoint, {
+        const response = await fetch(TRON_READ_RPC + endpoint, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
-        }),
-                { retries: 3, baseDelay: 900 }
-            );
+        });
 
         if (!response.ok) {
             throw new Error("RPC lectura " + endpoint + " respondió HTTP " + response.status);
